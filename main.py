@@ -45,7 +45,8 @@ def label_location(image, x, y, w, h):
 
     # Display the label on the image above the rectangle
     cv.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv.putText(image, location, (x, y-5), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    cv.putText(image, location, (x, y - 5), cv.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2)
+
 
     cv.imshow("Hand Detection", image)
 
