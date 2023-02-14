@@ -37,7 +37,7 @@ def detect_hand(img):
     cv.imshow("Hand Detection", img)
     return x, y, w, h
 
-# referenced Izane's github
+# referenced Izane's Github (https://github.com/lzane/Fingers-Detection-using-OpenCV-and-Python/blob/master/new.py)
 def count_fingers(masked_frame, drawing):
     hull = cv.convexHull(masked_frame, returnPoints=False)
     if len(hull) > 3:
@@ -56,11 +56,11 @@ def count_fingers(masked_frame, drawing):
                 if angle <= math.pi / 2:  # If angle less than 90 degree, treat as fingers
                     fold_count += 1
                     cv.circle(drawing, far, 8, [211, 84, 0], -1)
-            return True, fold_count + 1  # Plus 1, as the count is for folds between fingers
-    return False, 0
+            return fold_count + 1  # Plus 1, as the count is for folds between fingers
+    return 0
 
-# referenced Izane's github
-def create_pose_label(img, x, y, w, h):
+# referenced Izane's Github
+def get_figner_count(img, x, y, w, h):
     thresh_img = convert_to_binary(img)
     contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     length = len(contours)
@@ -80,12 +80,23 @@ def create_pose_label(img, x, y, w, h):
         cv.drawContours(drawing, [masked_frame], 0, (0, 255, 0), 2)
         cv.drawContours(drawing, [hull], 0, (0, 0, 255), 3)
 
-        done_counting, count = count_fingers(masked_frame, drawing)
+        finger_count = count_fingers(masked_frame, drawing)
 
-        if done_counting is True and count <= 2:
-            return count
+    # cv.imshow('output', drawing)
+    return finger_count
 
-    cv.imshow('output', drawing)
+def create_pose_label(img, x, y, w, h):
+    finger_count = get_figner_count(img, x, y, w, h)
+
+    print(finger_count)
+
+    if finger_count == 0:
+        pose = "fist"
+    elif finger_count == 5:
+        pose = "hi"  # need to distinguish between palm and splay
+    else:
+        pose = "unknown"
+    return pose
 
 def create_location_label(img, x, y, w, h):
     # Get the length of the image
