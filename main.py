@@ -1,8 +1,7 @@
-from __future__ import print_function
 import cv2 as cv
 import numpy as np
-import argparse
-import random as rng
+import math
+
 def resize_img(img):  # resize to 450px X 450px
     height, width = img.shape[:2]
     scaling_factor = 450.0 / height
@@ -32,19 +31,61 @@ def detect_hand(img):
     thresh_img = convert_to_binary(img)
     contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL,
                                       cv.CHAIN_APPROX_SIMPLE)
-    contour = max(contours, key=cv.contourArea)
-
-
-    x, y, w, h = cv.boundingRect(contour)
+    max_contour = max(contours, key=cv.contourArea)
+    x, y, w, h = cv.boundingRect(max_contour)
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     cv.imshow("Hand Detection", img)
     return x, y, w, h
 
+# referenced Izane's github
+def count_fingers(masked_frame, drawing):
+    hull = cv.convexHull(masked_frame, returnPoints=False)
+    if len(hull) > 3:
+        defects = cv.convexityDefects(masked_frame, hull)
+        if defects is not None:
+            fold_count = 0
+            for i in range(defects.shape[0]):
+                start_index, end_index, farthest_index, _ = defects[i][0]
+                start = tuple(masked_frame[start_index][0])
+                end = tuple(masked_frame[end_index][0])
+                far = tuple(masked_frame[farthest_index][0])
+                a = math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2)
+                b = math.sqrt((far[0] - start[0]) ** 2 + (far[1] - start[1]) ** 2)
+                c = math.sqrt((end[0] - far[0]) ** 2 + (end[1] - far[1]) ** 2)
+                angle = math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))  # Cosine theorem
+                if angle <= math.pi / 2:  # If angle less than 90 degree, treat as fingers
+                    fold_count += 1
+                    cv.circle(drawing, far, 8, [211, 84, 0], -1)
+            return True, fold_count + 1  # Plus 1, as the count is for folds between fingers
+    return False, 0
+
+# referenced Izane's github
 def create_pose_label(img, x, y, w, h):
-    # Count number of fingers
     thresh_img = convert_to_binary(img)
-    _, contours = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    return pose
+    contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    length = len(contours)
+
+    max_contour_area = -1
+
+    if length > 0:
+        for i in range(length):
+            temp = contours[i]
+            area = cv.contourArea(temp)
+            if area > max_contour_area:
+                max_contour_area = area
+                ci = i
+        masked_frame = contours[ci]
+        hull = cv.convexHull(masked_frame)
+        drawing = np.zeros(img.shape, np.uint8)
+        cv.drawContours(drawing, [masked_frame], 0, (0, 255, 0), 2)
+        cv.drawContours(drawing, [hull], 0, (0, 0, 255), 3)
+
+        done_counting, count = count_fingers(masked_frame, drawing)
+
+        if done_counting is True and count <= 2:
+            return count
+
+    cv.imshow('output', drawing)
 
 def create_location_label(img, x, y, w, h):
     # Get the length of the image
@@ -100,13 +141,13 @@ def main():
     # # create_location_label(img_fist_center, x, y, w, h)
     # label_pose_and_location(img_fist_center, x, y, w, h)
 
-    path_splay_uppR = './images/splay,uppR.jpg'
-    img_splay_uppR = cv.imread(path_splay_uppR)
-    img_splay_uppR = resize_img(img_splay_uppR)
-    # img_splay_uppR = darken_non_red_regions(img_splay_uppR)
-    x, y, w, h = detect_hand(img_splay_uppR)
-    # create_location_label(img_splay_uppR, x, y, w, h)
-    label_pose_and_location(img_splay_uppR, x, y, w, h)
+    # path_splay_uppR = './images/splay,uppR.jpg'
+    # img_splay_uppR = cv.imread(path_splay_uppR)
+    # img_splay_uppR = resize_img(img_splay_uppR)
+    # # img_splay_uppR = darken_non_red_regions(img_splay_uppR)
+    # x, y, w, h = detect_hand(img_splay_uppR)
+    # # create_location_label(img_splay_uppR, x, y, w, h)
+    # label_pose_and_location(img_splay_uppR, x, y, w, h)
 
     # path_fist_uppL = './images/fist,uppL.jpg'
     # img_fist_uppL = cv.imread(path_fist_uppL)
@@ -122,12 +163,12 @@ def main():
     # # create_location_label(img_splay_lowL, x, y, w, h)
     # label_pose_and_location(img_splay_lowL, x, y, w, h)
 
-    # path_palm_lowR = './images/palm,lowR.jpg'
-    # img_palm_lowR = cv.imread(path_palm_lowR)
-    # img_palm_lowR = resize_img(img_palm_lowR)
-    # x, y, w, h = detect_hand(img_palm_lowR)
-    # # create_location_label(img_palm_lowR, x, y, w, h)
-    # label_pose_and_location(img_palm_lowR, x, y, w, h)
+    path_palm_lowR = './images/palm,lowR.jpg'
+    img_palm_lowR = cv.imread(path_palm_lowR)
+    img_palm_lowR = resize_img(img_palm_lowR)
+    x, y, w, h = detect_hand(img_palm_lowR)
+    # create_location_label(img_palm_lowR, x, y, w, h)
+    label_pose_and_location(img_palm_lowR, x, y, w, h)
 
     # path_fist_lowL = './images/fist,lowL.jpg'
     # img_fist_lowL = cv.imread(path_fist_lowL)
