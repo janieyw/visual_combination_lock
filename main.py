@@ -60,7 +60,7 @@ def count_fingers(masked_frame, drawing):
     return 0
 
 # referenced Izane's Github
-def get_figner_count(img, x, y, w, h):
+def get_finger_count(img, x, y, w, h):
     thresh_img = convert_to_binary(img)
     contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     length = len(contours)
@@ -73,9 +73,12 @@ def get_figner_count(img, x, y, w, h):
             area = cv.contourArea(temp)
             if area > max_contour_area:
                 max_contour_area = area
-                ci = i
-        masked_frame = contours[ci]
+                index = i
+        masked_frame = contours[index]
         hull = cv.convexHull(masked_frame)
+        contour_area = cv.contourArea(masked_frame)
+        hull_area = cv.contourArea(hull)
+        area_diff = hull_area - contour_area
         drawing = np.zeros(img.shape, np.uint8)
         cv.drawContours(drawing, [masked_frame], 0, (0, 255, 0), 2)
         cv.drawContours(drawing, [hull], 0, (0, 0, 255), 3)
@@ -83,17 +86,18 @@ def get_figner_count(img, x, y, w, h):
         finger_count = count_fingers(masked_frame, drawing)
 
     # cv.imshow('output', drawing)
-    return finger_count
+    return finger_count, area_diff
 
 def create_pose_label(img, x, y, w, h):
-    finger_count = get_figner_count(img, x, y, w, h)
-
-    print(finger_count)
-
-    if finger_count == 0:
+    finger_count, area_diff = get_finger_count(img, x, y, w, h)
+    print(area_diff)
+    if finger_count <= 1:
         pose = "fist"
     elif finger_count == 5:
-        pose = "hi"  # need to distinguish between palm and splay
+        if area_diff > 3000:
+            pose = "splay"
+        else:
+            pose = "palm"
     else:
         pose = "unknown"
     return pose
@@ -152,13 +156,13 @@ def main():
     # # create_location_label(img_fist_center, x, y, w, h)
     # label_pose_and_location(img_fist_center, x, y, w, h)
 
-    # path_splay_uppR = './images/splay,uppR.jpg'
-    # img_splay_uppR = cv.imread(path_splay_uppR)
-    # img_splay_uppR = resize_img(img_splay_uppR)
-    # # img_splay_uppR = darken_non_red_regions(img_splay_uppR)
-    # x, y, w, h = detect_hand(img_splay_uppR)
-    # # create_location_label(img_splay_uppR, x, y, w, h)
-    # label_pose_and_location(img_splay_uppR, x, y, w, h)
+    path_splay_uppR = './images/splay,uppR.jpg'
+    img_splay_uppR = cv.imread(path_splay_uppR)
+    img_splay_uppR = resize_img(img_splay_uppR)
+    # img_splay_uppR = darken_non_red_regions(img_splay_uppR)
+    x, y, w, h = detect_hand(img_splay_uppR)
+    # create_location_label(img_splay_uppR, x, y, w, h)
+    label_pose_and_location(img_splay_uppR, x, y, w, h)
 
     # path_fist_uppL = './images/fist,uppL.jpg'
     # img_fist_uppL = cv.imread(path_fist_uppL)
@@ -174,12 +178,12 @@ def main():
     # # create_location_label(img_splay_lowL, x, y, w, h)
     # label_pose_and_location(img_splay_lowL, x, y, w, h)
 
-    path_palm_lowR = './images/palm,lowR.jpg'
-    img_palm_lowR = cv.imread(path_palm_lowR)
-    img_palm_lowR = resize_img(img_palm_lowR)
-    x, y, w, h = detect_hand(img_palm_lowR)
-    # create_location_label(img_palm_lowR, x, y, w, h)
-    label_pose_and_location(img_palm_lowR, x, y, w, h)
+    # path_palm_lowR = './images/palm,lowR.jpg'
+    # img_palm_lowR = cv.imread(path_palm_lowR)
+    # img_palm_lowR = resize_img(img_palm_lowR)
+    # x, y, w, h = detect_hand(img_palm_lowR)
+    # # create_location_label(img_palm_lowR, x, y, w, h)
+    # label_pose_and_location(img_palm_lowR, x, y, w, h)
 
     # path_fist_lowL = './images/fist,lowL.jpg'
     # img_fist_lowL = cv.imread(path_fist_lowL)
@@ -188,12 +192,12 @@ def main():
     # # create_location_label(img_fist_lowL, x, y, w, h)
     # label_pose_and_location(img_fist_lowL, x, y, w, h)
 
-    # path_palm_uppL = './images/palm,uppL.jpg'
-    # img_palm_uppL = cv.imread(path_palm_uppL)
-    # img_palm_uppL = resize_img(img_palm_uppL)
-    # x, y, w, h = detect_hand(img_palm_uppL)
-    # # create_location_label(img_palm_uppL, x, y, w, h)
-    # label_pose_and_location(img_palm_uppL, x, y, w, h)
+    path_palm_uppL = './images/palm,uppL.jpg'
+    img_palm_uppL = cv.imread(path_palm_uppL)
+    img_palm_uppL = resize_img(img_palm_uppL)
+    x, y, w, h = detect_hand(img_palm_uppL)
+    # create_location_label(img_palm_uppL, x, y, w, h)
+    label_pose_and_location(img_palm_uppL, x, y, w, h)
 
     cv.waitKey(0)
     cv.destroyAllWindows()
