@@ -116,25 +116,25 @@ def create_location_label(img, x, y, w, h):
     # rectangle falls into
     if center_x < sq_length:
         if center_y < sq_length:
-            location = "upperL"
+            location = "uppL"
         elif center_y < 2 * sq_length:
-            location = "centerL"
+            location = "cenL"
         else:
-            location = "lowerL"
+            location = "lowL"
     elif center_x < 2 * sq_length:
         if center_y < sq_length:
-            location = "lowerC"
+            location = "lowC"
         elif center_y < 2 * sq_length:
-            location = "centerC"
+            location = "cenC"
         else:
-            location = "upperC"
+            location = "uppC"
     else:
         if center_y < sq_length:
-            location = "upperR"
+            location = "uppR"
         elif center_y < 2 * sq_length:
-            location = "centerR"
+            location = "cenR"
         else:
-            location = "lowerR"
+            location = "lowR"
     return location
 
 def label_pose_and_location(img, x, y, w, h):
@@ -148,142 +148,90 @@ def label_pose_and_location(img, x, y, w, h):
     # Display the combined label on the image
     cv.putText(img, label, (x - 20, y + 20), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     cv.imshow("Hand Detection", img)
-
     cv.imshow("Binary Intermediate", threshold_img)
 
 def main():
-    # # For step 1.2 1)
-    # path_fist_center = './images/fist,center.jpg'
-    # img_fist_center = cv.imread(path_fist_center)
-    # img_fist_center = resize_img(img_fist_center)
-    # x, y, w, h = detect_hand(img_fist_center)
-    # label_pose_and_location(img_fist_center, x, y, w, h)
+    # # For step 1.2 1a)
+    # path = './images/fist,cenC_0.jpg'
 
-    # # For step 1.2 2)
-    # path_fist_centerC = './images/fist,centerC.jpg'
-    # img_fist_centerC = cv.imread(path_fist_centerC)
-    # img_fist_centerC = resize_img(img_fist_centerC)
-    # x, y, w, h = detect_hand(img_fist_centerC)
-    # label_pose_and_location(img_fist_centerC, x, y, w, h)
+    # # For step 1.2 1b)
+    # path = './images/fist,cenC_1.jpg'
 
-    # # For step 1.2 3)
-    # path_splay_uppR = './images/splay,uppR.jpg'
-    # img_splay_uppR = cv.imread(path_splay_uppR)
-    # img_splay_uppR = resize_img(img_splay_uppR)
-    # x, y, w, h = detect_hand(img_splay_uppR)
-    # label_pose_and_location(img_splay_uppR, x, y, w, h)
+    # # For step 1.2 2a)
+    # path = './images/splay,uppR_0.jpg'
 
-    # # For step 1.2 4)
-    # path_splay_uppR = './images/splay,uppR_0.jpg'
-    # img_splay_uppR = cv.imread(path_splay_uppR)
-    # img_splay_uppR = resize_img(img_splay_uppR)
-    # x, y, w, h = detect_hand(img_splay_uppR)
-    # label_pose_and_location(img_splay_uppR, x, y, w, h)
+    # # For step 1.2 2b)
+    # path = './images/splay,uppR_1.jpg'
 
     # # For step 1.3.1 1)
-    # path_fist_centerC = './images/fist,centerC_1.jpg'
-    # img_fist_centerC = cv.imread(path_fist_centerC)
-    # img_fist_centerC = resize_img(img_fist_centerC)
-    # x, y, w, h = detect_hand(img_fist_centerC)
-    # label_pose_and_location(img_fist_centerC, x, y, w, h)
+    # path = './images/fist,cenC_2.jpg'
 
     # # For step 1.3.1 2)
-    # path_fist_centerC = './images/fist,centerC_2.jpg'
-    # img_fist_centerC = cv.imread(path_fist_centerC)
-    # img_fist_centerC = resize_img(img_fist_centerC)
-    # x, y, w, h = detect_hand(img_fist_centerC)
-    # label_pose_and_location(img_fist_centerC, x, y, w, h)
+    # path = './images/unknown_as_fist_0.jpg'
 
     # # For step 1.3.1 3)
-    # path_splay_uppR_fn = './images/splay,uppR_fn.jpg'
-    # img_splay_uppR_fn = cv.imread(path_splay_uppR_fn)
-    # img_splay_uppR_fn = resize_img(img_splay_uppR_fn)
-    # x, y, w, h = detect_hand(img_splay_uppR_fn)
-    # label_pose_and_location(img_splay_uppR_fn, x, y, w, h)
+    # path = './images/splay,uppR_fn.jpg'
 
     # # For step 1.3.1 4)
-    # path_splay_uppR_fp = './images/splay,uppR_fp.jpg'
-    # img_splay_uppR_fp = cv.imread(path_splay_uppR_fp)
-    # img_splay_uppR_fp = resize_img(img_splay_uppR_fp)
-    # x, y, w, h = detect_hand(img_splay_uppR_fp)
-    # label_pose_and_location(img_splay_uppR_fp, x, y, w, h)
+    # path = './images/splay,uppR_fp.jpg'
 
-    # # # For step 1.3.1 5a)
-    # path_palm_centerC = './images/palm,center.jpg'
-    # img_palm_centerC = cv.imread(path_palm_centerC)
-    # img_palm_centerC = resize_img(img_palm_centerC)
-    # x, y, w, h = detect_hand(img_palm_centerC)
-    # label_pose_and_location(img_palm_centerC, x, y, w, h)
+    # # For step 1.3.1 5a)
+    # path = './images/palm,cenC_0.jpg'
 
     # # For step 1.3.1 5b)
-    # path_palm_lowR = './images/palm,lowR.jpg'
-    # img_palm_lowR = cv.imread(path_palm_lowR)
-    # img_palm_lowR = resize_img(img_palm_lowR)
-    # x, y, w, h = detect_hand(img_palm_lowR)
-    # label_pose_and_location(img_palm_lowR, x, y, w, h)
+    # path = './images/palm,lowR_0.jpg'
 
     # # For step 1.3.2 1a)
-    # path_palm_uppL = './images/palm,uppL.jpg'
-    # img_palm_uppL = cv.imread(path_palm_uppL)
-    # img_palm_uppL = resize_img(img_palm_uppL)
-    # x, y, w, h = detect_hand(img_palm_uppL)
-    # label_pose_and_location(img_palm_uppL, x, y, w, h)
+    # path = './images/palm,uppL_0.jpg'
 
     # # For step 1.3.2 1b)
-    # path_palm_lowL = './images/palm,lowL.jpg'
-    # img_palm_lowL = cv.imread(path_palm_lowL)
-    # img_palm_lowL = resize_img(img_palm_lowL)
-    # x, y, w, h = detect_hand(img_palm_lowL)
-    # label_pose_and_location(img_palm_lowL, x, y, w, h)
+    # path = './images/palm,lowL_0.jpg'
 
     # # For step 1.3.2 2)
-    # path_palm_cenC = './images/palm_1.jpg'
-    # img_palm_cenC = cv.imread(path_palm_cenC)
-    # img_palm_cenC = resize_img(img_palm_cenC)
-    # x, y, w, h = detect_hand(img_palm_cenC)
-    # label_pose_and_location(img_palm_cenC, x, y, w, h)
+    # path = './images/palm_0.jpg'  # doesn't work
+    # path = './images/palm_1.jpg'
+    # path = './images/palm_2.jpg'
+    # path = './images/palm_3.jpg'
 
     # # For step 1.3.2 3)
-    # path_splay_as_palm = './images/splay_as_palm.jpg'
-    # img_splay_as_palm = cv.imread(path_splay_as_palm)
-    # img_splay_as_palm = resize_img(img_splay_as_palm)
-    # x, y, w, h = detect_hand(img_splay_as_palm)
-    # label_pose_and_location(img_splay_as_palm, x, y, w, h)
+    # path = './images/splay_as_palm.jpg'
 
     # # For step 1.3.2 4a)
-    # path_other_uppR = './images/other,uppR.jpg'
-    # img_other_uppR = cv.imread(path_other_uppR)
-    # img_other_uppR = resize_img(img_other_uppR)
-    # x, y, w, h = detect_hand(img_other_uppR)
-    # label_pose_and_location(img_other_uppR, x, y, w, h)
+    # path = './images/unknown,uppR_0.jpg'
 
     # # For step 1.3.2 4b)
-    # path_other_uppR = './images/other,uppR_0.jpg'
-    # img_other_uppR = cv.imread(path_other_uppR)
-    # img_other_uppR = resize_img(img_other_uppR)
-    # x, y, w, h = detect_hand(img_other_uppR)
-    # label_pose_and_location(img_other_uppR, x, y, w, h)
+    # path = './images/unknown,uppR_1.jpg'
 
     # # For step 1.4 easy
-    # path_easy = './images/easyf_2.jpg'
-    # img_easy = cv.imread(path_easy)
-    # img_easy = resize_img(img_easy)
-    # x, y, w, h = detect_hand(img_easy)
-    # label_pose_and_location(img_easy, x, y, w, h)
+    # path = './images/easy_me_0.jpg'
+    # path = './images/easy_me_1.jpg'
+    # path = './images/easy_friend_0.jpg'
+    # path = './images/easy_friend_1.jpg'
 
     # # For step 1.4 good
-    # path_easy = './images/goodf_3.JPG'
-    # img_easy = cv.imread(path_easy)
-    # img_easy = resize_img(img_easy)
-    # x, y, w, h = detect_hand(img_easy)
-    # label_pose_and_location(img_easy, x, y, w, h)
+    # path = './images/good_me_0.JPG'
+    # path = './images/good_me_1.JPG'
+    # path = './images/good_me_2.JPG'
+    # path = './images/good_friend_0.JPG'
+    # path = './images/good_friend_1.JPG'
+    # path = './images/good_friend_2.JPG'
 
     # # For step 1.4 difficult
-    # path_diff = './images/difff_5.jpg'
-    # img_diff = cv.imread(path_diff)
-    # img_diff = resize_img(img_diff)
-    # x, y, w, h = detect_hand(img_diff)
-    # label_pose_and_location(img_diff, x, y, w, h)
+    # path = './images/diff_me_0.jpg'
+    # path = './images/diff_me_1.jpg'
+    # path = './images/diff_me_2.jpg'
+    # path = './images/diff_me_3.jpg'
+    # path = './images/diff_me_4.jpg'
+    # path = './images/diff_friend_0.jpg'
+    # path = './images/diff_friend_1.jpg'
+    # path = './images/diff_friend_2.jpg'
+    # path = './images/diff_friend_3.jpg'
+    # path = './images/diff_friend_4.jpg'
+
+    img = cv.imread(path)
+    img = resize_img(img)
+    x, y, w, h = detect_hand(img)
+    label_pose_and_location(img, x, y, w, h)
 
     cv.waitKey(0)
     cv.destroyAllWindows()
