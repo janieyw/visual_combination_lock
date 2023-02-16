@@ -29,8 +29,7 @@ def darken_non_red_regions(img):
 def detect_hand(img):
     # darken_non_red_regions(img)
     thresh_img = convert_to_binary(img)
-    contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL,
-                                      cv.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     max_contour = max(contours, key=cv.contourArea)
     x, y, w, h = cv.boundingRect(max_contour)
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
