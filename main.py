@@ -30,7 +30,7 @@ def detect_hand(img):
     # darken_non_red_regions(img)
     thresh_img = convert_to_binary(img)
     contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    max_contour = max(contours, key=cv.contourArea)
+    max_contour = max(contours, key = cv.contourArea)
     x, y, w, h = cv.boundingRect(max_contour)
     cv.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
     cv.imshow("Hand Detection", img)
@@ -38,7 +38,7 @@ def detect_hand(img):
 
 # referenced Izane's Github (https://github.com/lzane/Fingers-Detection-using-OpenCV-and-Python/blob/master/new.py)
 def count_fingers(masked_frame, drawing):
-    hull = cv.convexHull(masked_frame, returnPoints=False)
+    hull = cv.convexHull(masked_frame, returnPoints = False)
     if len(hull) > 3:
         defects = cv.convexityDefects(masked_frame, hull)
         if defects is not None:
@@ -111,8 +111,7 @@ def create_location_label(img, x, y, w, h):
     # Identify the center of the bounding rectangle surrounding the hand
     center_x, center_y = x + w // 2, y + h // 2
 
-    # Determine which of the 9 smaller squares the center of the bounding
-    # rectangle falls into
+    # Determine which of the 9 smaller squares the center of the bounding rectangle falls into
     if center_x < sq_length:
         if center_y < sq_length:
             location = "uppL"
