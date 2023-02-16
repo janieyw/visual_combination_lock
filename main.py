@@ -14,8 +14,8 @@ def convert_to_gray(img):
 def convert_to_binary(img):
     gray_img = convert_to_gray(img)
     _, thresh_img = cv.threshold(gray_img, 160, 340, cv.THRESH_BINARY)
-    thresh_img = cv.erode(thresh_img, None, iterations=2)
-    thresh_img = cv.dilate(thresh_img, None, iterations=2)
+    thresh_img = cv.erode(thresh_img, None, iterations = 2)
+    thresh_img = cv.dilate(thresh_img, None, iterations = 2)
     return thresh_img
 
 def darken_non_red_regions(img):
