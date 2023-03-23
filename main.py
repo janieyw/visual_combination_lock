@@ -36,7 +36,8 @@ def detect_hand(img):
     cv.imshow("Hand Detection", img)
     return x, y, w, h
 
-# referenced Izane's Github (https://github.com/lzane/Fingers-Detection-using-OpenCV-and-Python/blob/master/new.py)
+# Adapted from the "Fingers-Detection-using-OpenCV-and-Python" project by Izane
+# https://github.com/lzane/Fingers-Detection-using-OpenCV-and-Python/blob/master/new.py
 def count_fingers(masked_frame, drawing):
     hull = cv.convexHull(masked_frame, returnPoints = False)
     if len(hull) > 3:
@@ -58,7 +59,7 @@ def count_fingers(masked_frame, drawing):
             return fold_count + 1  # Plus 1, as the count is for folds between fingers
     return 0
 
-# referenced Izane's Github
+# Adapted from the "Fingers-Detection-using-OpenCV-and-Python" project by Izane
 def get_finger_count(img, x, y, w, h):
     thresh_img = convert_to_binary(img)
     contours, _ = cv.findContours(thresh_img, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
